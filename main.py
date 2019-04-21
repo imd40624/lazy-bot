@@ -70,7 +70,7 @@ async def on_ready():
     
 @bot.command(pass_context=True)
 async def ping(ctx):
-    await client.say(":ping_pong: ping!! xSSS")
+    await bot.say(":ping_pong: ping!! xSSS")
     print ("user has pinged")   
     
     
@@ -91,18 +91,18 @@ async def userinfo(ctx, user: discord.Member):
     
     
 @bot.command(Pass_Context=True) 
-async def invite():
+async def invite(ctx):
     embed=discord.Embed(title="Invite Me", description="Invite LaZy today!", color=0xff0000)
     embed.set_author(name="Invite LaZy")
     embed.set_footer(text="Made By DAKSH#0053") 
     embed.add_field(name="Invite", value=f"[Click here for Link](https://discordapp.com/api/oauth2/authorize?client_id=569463328942850078&permissions=8&scope=bot)")
-    await bot.say(embed=embed)
+    await bot.send(embed=embed)
     
   
 @bot.command(pass_context=True)
 async def joined(ctx, member: discord.Member):
     """Says when a member joined."""
-    await bot.say('{0.name} joined in {0.joined_at}'.format(member)) 
+    await bot.send('{0.name} joined in {0.joined_at}'.format(member)) 
    
    
    
