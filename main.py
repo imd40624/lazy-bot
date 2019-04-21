@@ -1,79 +1,81 @@
 import discord
-from discord.ext.commands import Bot
-from discord.ext import commands
-import youtube_dl
 import asyncio
-import queue
-import time
-import json
-import random
-import inspect
-import datetime
+import youtube_dl
 import os
-from discord import Game
-from discord.utils import get
+import colorsys
+import logging
+import typing
+import json
+import aiohttp
+import requests
+import string
+import translate
+import html
+import math
+import functools
+import psutil
+import traceback
+import re
+from random import choice as randchoice
+import rethinkdb as r
+import discord, datetime, time
+from translate import Translator
+from discord import Game, Embed, Color, Status, ChannelType
+from discord.ext import commands
+from discord.ext.commands import Bot
+from discord.ext.commands import has_permissions 
+from discord.utils import get,find
+from time import localtime, strftime
+import requests as rq
+import random
+from discord.ext import commands
+from urllib.request import Request, urlopen
+import json
+import urllib
+import requests
+import Token
+import time
+from datetime import datetime
+from urllib.parse import quote_plus
 
-Client = discord.client
-client = commands.Bot(command_prefix = 'ly.')
-Clientdiscord = discord.Client()
-evn=client.event
-cms=client.command(pass_context=True)
+start_time = time.time()
 
-async def picker():
-    mem_watching=['{} Users']
-    mem_watching=['Biquest']
-    mem_listening=['{} Users']
-    mem_playing=['Need upvotes to grow!']
-    ser_watch=['{} servers']
-    ser_listen=['Steveo']
-    ser_play=['bq.help | v1.0']
-    helps=['!help | for help','!help for help commands']
+bot = commands.Bot(command_prefix=ly.)
 
+
+async def status_task():
     while True:
-        kind=random.randint(1,2)
-        if kind == 1:
-            members=0
-            for i in client.servers:
-                members+=len(i.members)
-            num = random.choice([1, 2, 3])
-            if num == 1:
-                await client.change_presence(game=discord.Game(name=random.choice(mem_playing).format(members), type=1))
-            if num == 2:
-                await client.change_presence(game=discord.Game(name=random.choice(mem_listening).format(members), type=2))
-            if num == 3:
-                await client.change_presence(game=discord.Game(name=random.choice(mem_watching).format(members), type=3))
-            await asyncio.sleep(random.choice([10, 10, 10, 10, 10, 10]))
-
-        if kind == 2:
-            num = random.choice([1, 2, 3])
-            if num == 1:
-                await client.change_presence(game=discord.Game(name=random.choice(ser_play).format(len(client.servers)), type=1))
-            if num == 2:
-                await client.change_presence(game=discord.Game(name=random.choice(ser_listen).format(len(client.servers)), type=2))
-            if num == 3:
-                await client.change_presence(game=discord.Game(name=random.choice(ser_watch).format(len(client.servers)), type=3))
-            await asyncio.sleep(random.choice([10, 10, 10, 10, 10, 10]))
-
-        if kind == 3:
-            await client.change_presence(game=discord.Game(name=random.choice(ser_watch).format(len(client.servers)), type=3))
-            await asyncio.sleep(random.choice([10, 10, 10, 10, 10, 10]))
+        await bot.change_presence(game=discord.Game(name='ly.help', type=2))
+        await asyncio.sleep(5)
+        await bot.change_presence(game=discord.Game(name=str(len(set(bot.get_all_members())))+' users', type=3))
+        await asyncio.sleep(5)
+        await bot.change_presence(game=discord.Game(name=str(len(bot.servers))+' servers', type=3))
+        await asyncio.sleep(5)
+        await bot.change_presence(game=discord.Game(name='music'))
+        await asyncio.sleep(5)
+        await bot.change_presence(game=discord.Game(name='I need some vote;('))
+        await asyncio.sleep(5)
             
             
-@client.event
+@bot.event
 async def on_ready():
-    client.loop.create_task(picker())
-    print("{} has successfully booted and running!".format(client.user.name)) 
+   bot.loop.create_task(status_task())
+   print(bot.user.name)
+	
+   print('Servers connected to:')
+   for server in bot.servers:
+        print(server.name)
     
     
     
-@client.command(pass_context=True)
+@bot.command(pass_context=True)
 async def ping(ctx):
     await client.say(":ping_pong: ping!! xSSS")
     print ("user has pinged")   
     
     
     
-@client.command(pass_context=True)
+@bot.command(pass_context=True)
 async def userinfo(ctx, user: discord.Member):
     embed = discord.Embed(title="{}'s info".format(user.name), description="Here's what I could find.", color=0xe67e22)
     embed.add_field(name="Name", value=user.name, inline=True)
@@ -85,37 +87,37 @@ async def userinfo(ctx, user: discord.Member):
     embed.add_field(name="Nickname", value=user.nick)
     embed.add_field(name="Bot", value=user.bot)
     embed.set_thumbnail(url=user.avatar_url)
-    await client.say(embed=embed)  
+    await bot.say(embed=embed)  
     
     
-@client.command(Pass_Context=True) 
+@bot.command(Pass_Context=True) 
 async def invite():
     embed=discord.Embed(title="Invite Me", description="Invite LaZy today!", color=0xff0000)
     embed.set_author(name="Invite LaZy")
     embed.set_footer(text="Made By DAKSH#0053") 
     embed.add_field(name="Invite", value=f"[Click here for Link](https://discordapp.com/api/oauth2/authorize?client_id=569463328942850078&permissions=8&scope=bot)")
-    await client.say(embed=embed)
+    await bot.say(embed=embed)
     
   
-@client.command(pass_context=True)
+@bot.command(pass_context=True)
 async def joined(ctx, member: discord.Member):
     """Says when a member joined."""
-    await client.say('{0.name} joined in {0.joined_at}'.format(member)) 
+    await bot.say('{0.name} joined in {0.joined_at}'.format(member)) 
    
    
    
-@client.event
+@bot.event
 async def on_member_remove(member):
     server = member.server
     channel = get(member.server.channels, name="join-leave")
     s=discord.Embed(description="**{}** just left the server".format(member.name), colour=0xf84b50, timestamp=datetime.utcnow())
     s.set_author(name=member, icon_url=member.avatar_url)
     s.set_footer(text="User ID: {}".format(member.id))
-    await client.send_message(channel, embed=s)   
+    await bot.send_message(channel, embed=s)   
    
    
    
-@client.command(pass_context=True, aliases=['server'])
+@bot.command(pass_context=True, aliases=['server'])
 @commands.has_permissions(kick_members=True)
 async def membercount(ctx, *args):
     if ctx.message.channel.is_private:
@@ -141,12 +143,12 @@ async def membercount(ctx, *args):
                         "Created:   %s\n" \
                         "```" % (membs, membs_on, users, users_on, bots, bots_on, created)
 
-    await client.send_message(ctx.message.channel, embed=em)
-    await client.delete_message(ctx.message)
+    await bot.send_message(ctx.message.channel, embed=em)
+    await bot.delete_message(ctx.message)
    
    
    
-@client.command(pass_context=True)
+@bot.command(pass_context=True)
 @commands.has_permissions(administrator=True)
 async def embed(ctx, *args):
     if ctx.message.author.bot:
@@ -156,12 +158,12 @@ async def embed(ctx, *args):
       r, g, b = tuple(int(x * 255) for x in colorsys.hsv_to_rgb(random.random(), 1, 1))
       text = argstr
       color = discord.Color((r << 16) + (g << 8) + b)
-      await client.send_message(ctx.message.channel, embed=Embed(color = color, description=text))
-      await client.delete_message(ctx.message)   
+      await bot.send_message(ctx.message.channel, embed=Embed(color = color, description=text))
+      await bot.delete_message(ctx.message)   
       
       
       
       
       
       
-client.run(os.environ['BOT_TOKEN'])      
+bot.run(os.environ['BOT_TOKEN'])      
