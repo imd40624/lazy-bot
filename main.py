@@ -40,7 +40,7 @@ from urllib.parse import quote_plus
 
 start_time = time.time()
 
-bot = commands.Bot(command_prefix=ly.)
+bot = commands.Bot(command_prefix="ly.")
 
 
 async def status_task():
