@@ -1,0 +1,10 @@
+discord
+asyncio
+youtube-dl
+PyNaCl
+requests
+translate
+utils
+psutil
+Token 
+rethinkdb
