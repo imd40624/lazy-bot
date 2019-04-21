@@ -14,7 +14,7 @@ from discord import Game
 from discord.utils import get
 
 Client = discord.client
-client = commands.Bot(command_prefix = 'bq.')
+client = commands.Bot(command_prefix = 'ly.')
 Clientdiscord = discord.Client()
 evn=client.event
 cms=client.command(pass_context=True)
